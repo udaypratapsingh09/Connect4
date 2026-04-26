@@ -502,13 +502,13 @@ class PygameUI:
         if leftover > 0:
             pygame.time.wait(leftover)
 
-        pygame.event.clear()   # discard any input queued during thinking
+        pygame.event.clear([pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP])   # discard any input queued during thinking
         self._engine.make_move(col)
 
         # Brief pause after piece lands so the move registers visually
         self._draw()
         pygame.time.wait(150)
-        pygame.event.clear()
+        pygame.event.clear([pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP])
 
     # ── Drawing ───────────────────────────────────────────────────────────────
 
