@@ -414,9 +414,11 @@ class PygameUI:
 
         self._engine:    GameEngine    = GameEngine()
         self._hover_col: Optional[int] = None
-        self._waiting:   bool          = False   # True during post-move delay
-        self._human_just_moved: bool   = False   # defer AI by one frame
+        self._waiting:   bool          = False
+        self._human_just_moved: bool   = False
+        self._result_logged:    bool   = False
         self._clock = pygame.time.Clock()
+        self._print_game_header()
 
     # ── Public ────────────────────────────────────────────────────────────────
 
@@ -457,6 +459,8 @@ class PygameUI:
                     self._hover_col        = None
                     self._waiting          = False
                     self._human_just_moved = False
+                    self._result_logged    = False
+                    self._print_game_header()
                     # Rebuild agents so player tokens reset correctly
                     a1, a2, _, _ = self.config.build_agents()
                     self.agent1, self.agent2 = a1, a2
@@ -475,6 +479,10 @@ class PygameUI:
                     col = self._x_to_col(event.pos[0])
                     if col is not None and self._engine.is_valid_move(col):
                         self._engine.make_move(col)
+                        move_num = self._engine.get_move_count()
+                        player   = self._engine.get_opponent()
+                        print(f"  Move {move_num:>2} | {self.label[player]:<20} | col {col}")
+                        self._log_result_if_terminal()
                         self._hover_col        = None
                         self._human_just_moved = True
 
@@ -496,14 +504,19 @@ class PygameUI:
 
         t_start = pygame.time.get_ticks()
         col     = self._current_agent().choose_move(self._engine)
+        elapsed = pygame.time.get_ticks() - t_start
 
         # Guarantee overlay stays visible for at least AI_DELAY ms
-        leftover = AI_DELAY - (pygame.time.get_ticks() - t_start)
+        leftover = AI_DELAY - elapsed
         if leftover > 0:
             pygame.time.wait(leftover)
 
-        pygame.event.clear([pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP])   # discard any input queued during thinking
+        pygame.event.clear([pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP])
         self._engine.make_move(col)
+        move_num = self._engine.get_move_count()
+        player   = self._engine.get_opponent()  # who just moved
+        print(f"  Move {move_num:>2} | {self.label[player]:<20} | col {col}  ({elapsed}ms)")
+        self._log_result_if_terminal()
 
         # Brief pause after piece lands so the move registers visually
         self._draw()
@@ -616,6 +629,25 @@ class PygameUI:
 
         sub = self.fonts["sm"].render("R = play again    M = menu    ESC = quit", True, C_MUTED)
         self.screen.blit(sub, (WIN_W // 2 - sub.get_width() // 2, banner_y + 115))
+
+    def _log_result_if_terminal(self) -> None:
+        if not self._engine.is_terminal() or self._result_logged:
+            return
+        winner = self._engine.get_winner()
+        print(f"  {'─'*48}")
+        if winner is not None:
+            print(f"  Result : {self.label[winner]} wins!  (moves: {self._engine.get_move_count()})")
+        else:
+            print(f"  Result : Draw  (moves: {self._engine.get_move_count()})")
+        print(f"  {'─'*48}")
+        self._result_logged = True
+
+    def _print_game_header(self) -> None:
+        print(f"\n  {'─'*48}")
+        print(f"  {self.label[P1]} (P1)  vs  {self.label[P2]} (P2)")
+        print(f"  {'─'*48}")
+        print(f"  {'Move':>6} | {'Player':<20} | {'Col'}  (think time)")
+        print(f"  {'─'*6}-+-{'─'*20}-+-{'─'*18}")
 
     # ── Utility ───────────────────────────────────────────────────────────────
 
