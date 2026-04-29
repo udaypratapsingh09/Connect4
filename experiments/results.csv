@@ -1,5 +1,5 @@
 config,minimax_depth,mcts_simulations,n_games,minimax_wins,mcts_wins,draws,minimax_win_pct,mcts_win_pct,draw_pct,avg_minimax_time,avg_mcts_time
-depth3_vs_200sims,3,200,50,37,13,0,74.0,26.0,0.0,0.0119,0.1778
-depth4_vs_500sims,4,500,50,33,17,0,66.0,34.0,0.0,0.0283,0.3441
-depth5_vs_1000sims,5,1000,50,22,28,0,44.0,56.0,0.0,0.0822,0.6617
-depth6_vs_2000sims,6,2000,50,39,11,0,78.0,22.0,0.0,0.2343,1.0881
+depth3_vs_200sims,3,200,200,148,51,1,74.0,25.5,0.5,0.0087,0.1268
+depth4_vs_500sims,4,500,200,135,64,1,67.5,32.0,0.5,0.0228,0.2692
+depth5_vs_1000sims,5,1000,200,91,109,0,45.5,54.5,0.0,0.0653,0.5254
+depth6_vs_2000sims,6,2000,200,155,45,0,77.5,22.5,0.0,0.2058,0.9545

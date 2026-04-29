@@ -21,17 +21,20 @@ plt.xticks(x, df['config'], rotation=30)
 plt.legend()
 
 plt.tight_layout()
-# plt.show()
-plt.savefig("win_percentage_comparison.png")
+plt.savefig("sample_win_percentage_comparison.png")
 
 plt.figure()
-plt.plot(df['minimax_depth'], df['avg_minimax_time'], marker='o', label='Minimax Time')
-plt.plot(df['minimax_depth'], df['avg_mcts_time'], marker='o', label='MCTS Time')
 
-plt.xlabel("Minimax Depth")
+plt.plot(df['config'], df['avg_minimax_time'], marker='o', label='Minimax')
+plt.plot(df['config'], df['avg_mcts_time'], marker='o', label='MCTS')
+
+plt.xlabel("Configuration (Depth vs Simulations)")
 plt.ylabel("Time (seconds)")
-plt.title("Computation Time")
+plt.title("Computation Time Comparison")
 
+plt.xticks(rotation=30)
+plt.grid(alpha=0.3)
 plt.legend()
-# plt.show()
-plt.savefig("computation_time_comparison.png")
+
+plt.tight_layout()
+plt.savefig("sample_computation_time_comparison.png")
