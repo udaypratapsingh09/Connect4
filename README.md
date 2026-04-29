@@ -132,21 +132,6 @@ Each configuration runs **50+ games**:
 * A **crossover point** exists where MCTS outperforms Minimax
 * Minimax hits a **practical ceiling (~depth 5–6)**
 
-### Expected Conclusion
-
-* MCTS (200 sims) ≈ Minimax (depth 3–4)
-* MCTS (2000 sims) > Minimax (depth 6)
-
----
-
-## 📈 Graphs Generated
-
-* Win rate comparison (bar chart)
-* Move time vs depth/simulations
-* Strength vs time tradeoff
-
----
-
 ## 🧠 Key Concepts
 
 * Deterministic vs probabilistic decision-making
